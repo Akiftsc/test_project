@@ -1,10 +1,30 @@
 import express from "express";
+import dotenv from "dotenv";
+import conn from "./db.js";
+
+dotenv.config();
+
+//* Db connection
+
+conn();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
+
+//* Ejs Template Engine
+
+app.set("view engine", "ejs");
+
+//* Static Files Middleware
+
+app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-  res.send("<h1>Index Sayfası</h1>");
+  res.render("index");
+});
+
+app.get("/about", (req, res) => {
+  res.render("about");
 });
 
 app.listen(port, () => {
