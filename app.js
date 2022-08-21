@@ -1,4 +1,6 @@
 import express from "express";
+import pageRouter from "./routers/pageRoute.js";
+import photoRouter from "./routers/photoRoute.js";
 import dotenv from "dotenv";
 import conn from "./db.js";
 
@@ -18,14 +20,12 @@ app.set("view engine", "ejs");
 //* Static Files Middleware
 
 app.use(express.static("public"));
+app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.render("index");
-});
+//* Routes
 
-app.get("/about", (req, res) => {
-  res.render("about");
-});
+app.use("/", pageRouter);
+app.use("/photos", photoRouter);
 
 app.listen(port, () => {
   console.log(`Server is up while using port ${port}`);
