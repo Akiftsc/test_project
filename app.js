@@ -1,7 +1,9 @@
 import express from "express";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 import pageRouter from "./routers/pageRoute.js";
 import photoRouter from "./routers/photoRoute.js";
-import dotenv from "dotenv";
+import userRouter from "./routers/userRoute.js";
 import conn from "./db.js";
 
 dotenv.config();
@@ -21,11 +23,14 @@ app.set("view engine", "ejs");
 
 app.use(express.static("public"));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 //* Routes
 
 app.use("/", pageRouter);
 app.use("/photos", photoRouter);
+app.use("/users", userRouter);
 
 app.listen(port, () => {
   console.log(`Server is up while using port ${port}`);
