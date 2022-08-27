@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import validator from "validator";
 import bcrypt from "bcrypt";
 
 const { Schema } = mongoose;
@@ -7,17 +8,20 @@ const userSchema = new Schema(
   {
     username: {
       type: String,
-      required: true,
-      unique: true,
+      required: [true, "Username area is must to fill"],
+      lowercase: true,
+      validate: [validator.isAlphanumeric, "Only Alphanumeric characters"],
     },
     email: {
       type: String,
-      required: true,
+      required: [true, "Email area is must to fill"],
       unique: true,
+      validate: [validator.isEmail, "Please put acceptable email"],
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "Password area is must to fill"],
+      minLenght: [6, "You must put least 6 characters"],
     },
   },
   {

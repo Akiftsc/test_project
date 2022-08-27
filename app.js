@@ -5,6 +5,7 @@ import pageRouter from "./routers/pageRoute.js";
 import photoRouter from "./routers/photoRoute.js";
 import userRouter from "./routers/userRoute.js";
 import conn from "./db.js";
+import { checkUser } from "./middlewares/authMiddleware.js";
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 //* Routes
-
+app.get("*", checkUser);
 app.use("/", pageRouter);
 app.use("/photos", photoRouter);
 app.use("/users", userRouter);

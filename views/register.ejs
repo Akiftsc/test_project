@@ -1,9 +1,10 @@
 <%-include('partials/_header')%>
 
 <body class="main-layout inner_page">
-   <%-include('partials/_loader')%>
+   
+  <%-include('partials/_loader')%>
+  <%-include('partials/_menu')%>
 
-   <%-include('partials/_menu')%>
 
     <div class="contact">
           <div class="container">
@@ -20,10 +21,19 @@
                       <input class="form_control" placeholder="Username" type="text" name="username"> 
                     </div>
                     <div class="col-md-12">
+                        <p style="display: none; font-size:14px;" class="text-danger" id="username"></p>
+                    </div>
+                    <div class="col-md-12">
                       <input class="form_control" placeholder="howtotext@mymail.com" type="email" name="email">                          
                     </div>
                     <div class="col-md-12">
+                              <p style="display: none; font-size:14px;" class="text-danger" id="email"></p>
+                           </div>
+                    <div class="col-md-12">
                       <input class="form_control" placeholder="Password" type="password" name="password">                          
+                    </div>
+                    <div class="col-md-12">
+                              <p style="display: none; font-size:14px;" class="text-danger" id="password"></p>
                     </div>
                     <div class="col-md-12">
                         <div class="group_form">
@@ -33,6 +43,80 @@
                     </div>
                   </div>
                 </form>
+          <script>
+            const form = document.querySelector('form')
+            const emailError = document.querySelector('#email')
+            const passwordError = document.querySelector('#password')
+            const usernameError = document.querySelector('#username')
+
+            form.addEventListener("submit", async (e) => {
+               e.preventDefault();
+
+               emailError.textContent = "";
+               passwordError.textContent = "";
+               usernameError.textContent = "";
+               emailError.style.display = "none"
+               passwordError.style.display = "none"
+               usernameError.style.display = "none"
+
+               const email = form.email.value
+               const password = form.password.value
+               const username = form.username.value
+
+               try {
+                  const res = await fetch('users/register', {
+                     method: "POST",
+                     body: JSON.stringify({ email, password, username }),
+                     headers: { "Content-Type": "application/json" }
+                  })
+
+                  const data = await res.json();
+
+                  if (data) {
+                        console.log(data)
+                     if (data.email) {
+                        emailError.textContent = data.email
+                        emailError.style.display = "block"
+                        setTimeout(() => {
+                        emailError.style.display = "none"
+                        }, 2500);
+                     }
+
+                     if (data.password) {
+                        passwordError.textContent = data.password
+                        passwordError.style.display = "block"
+                          setTimeout(() => {
+                        passwordError.style.display = "none"
+                        }, 2500);
+                     }
+
+                     if (data.username) {
+                        usernameError.textContent = data.username
+                        usernameError.style.display = "block"
+                          setTimeout(() => {
+                        usernameError.style.display = "none"
+                        }, 2500);
+                     }
+
+
+                  }
+                  if (data.user) {
+                    Swal.fire(
+                      'Başarılı!',
+                      'Mükemmel bir klikle kayıt oldunuz^',
+                      'success'
+                    )
+                    setTimeout(() => {                      
+                            location.assign("/login")
+                          }, 4000);
+                  }
+               } catch (err) {
+                  console.log("ERR::", err)
+               }
+            })
+         </script>
+
+
               </div>
             </div>
           </div>
