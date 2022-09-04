@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Photo from "../models/photoModel.js";
 
 const createUser = async (req, res) => {
   try {
@@ -28,13 +29,12 @@ const loginUser = async (req, res) => {
     const { username, password } = req.body;
 
     const user = await User.findOne({ username });
-
     let same = false;
 
     if (user) {
       same = await bcrypt.compare(password, user.password);
     } else {
-      return res.status(401).json({
+      res.status(401).json({
         succeded: false,
         error: "There is no such user",
       });
@@ -46,8 +46,7 @@ const loginUser = async (req, res) => {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24,
       });
-
-      res.redirect("/users/dashboard");
+      res.redirect("/users/dashboard/");
     } else {
       res.status(401).json({
         succeded: false,
@@ -56,7 +55,7 @@ const loginUser = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({
-      succeded: false,
+      succeded: "false",
       error,
     });
   }
@@ -68,10 +67,37 @@ const createToken = (userId) => {
   });
 };
 
-const getDashboard = (req, res) => {
+const getDashboard = async (req, res) => {
+  const photos = await Photo.find({ user: res.locals.user._id });
+  const user = await User.findById(res.locals.user._id).populate();
   res.render("dashboard", {
     link: "dashboard",
+    user,
+    photos,
   });
 };
 
-export { createUser, loginUser, getDashboard };
+const getAllUsers = async (req, res) => {
+  let users = await User.find({ _id: { $ne: res.locals.user._id } });
+
+  res.render("users", {
+    link: "users",
+    users,
+  });
+};
+const getAUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    const photos = await Photo.find({ user: user._id });
+    res.status(200).render("user", {
+      user,
+      photos,
+      link: "users",
+    });
+  } catch (error) {
+    res.send("<h1 style='color:red'>HATA</h1>" + error);
+  }
+};
+
+export { createUser, loginUser, getDashboard, getAllUsers, getAUser };

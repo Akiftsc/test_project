@@ -12,11 +12,12 @@
               <div class="titlepage text_align_left">
                 <h2 style="text-transform:uppercase;font: size 24px;;color:rgba(0, 0, 0, 0.732); "><%=photo.name%></h2>
                 <p><%=photo.description%></p>
+                <a href="/users/<%=photo.user._id%>" style="font-size:16px;">By<i style="color:blueviolet"> <%=photo.user.username%></i></a>
               </div>
             </div>
             <div class="col-md-6">
               <div class="about_img">
-                <figure><img src="/images/about_img.png" alt="#"/></figure>
+                <figure><img src="<%=photo.url%>" alt="#"/></figure>
               </div>
             </div>
           </div>

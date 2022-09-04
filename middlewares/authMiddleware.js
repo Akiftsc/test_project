@@ -27,9 +27,13 @@ const authenticateToken = async (req, res, next) => {
     const token = req.cookies.jwt;
 
     if (token) {
-      jwt.verify(token, process.env.JWT_SECRET, (err) =>
-        err ? res.redirect("/login") : next()
-      );
+      jwt.verify(token, process.env.JWT_SECRET, (err) => {
+        if (err) {
+          es.redirect("/login");
+        } else {
+          next();
+        }
+      });
     } else {
       res.redirect("/login");
     }

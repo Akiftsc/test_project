@@ -1,0 +1,39 @@
+<%-include('partials/_header')%>
+<%-include('partials/_loader')%>
+<body class="main-layout">
+<%-include('partials/_menu')%>     
+      <!-- team -->
+      <div class="team">
+         <div class="container_with">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="titlepage text_align_center">
+                     <h2>All Users</h2>
+                  </div>
+               </div>
+         <style>
+            .a:hover{
+               transition: 250ms all;
+               color: #D43A8E !important;
+            }
+         </style>
+         <% for (user of users){ %>
+               <div class="col-md-4">
+                  <div class="team_box text_align_center">
+                     <div class="team_img">
+                       <figure><img src="images/team1.jpg" alt="#"/></figure>
+                     </div>
+                     <div class="craig">
+                        <a href="/users/<%=user._id%>" class="a">
+                           <h3 class="a"><%=user.username%></h3>
+                           <span style="font-size:16px;" class="a text-lowercase"><%=user.email%></span>
+                        </a>
+                     </div>
+                  </div>
+               </div>
+         <%  }%>
+            </div>
+         </div>
+      </div>
+      <!-- end team -->
+         <%-include('partials/_footer')%>
